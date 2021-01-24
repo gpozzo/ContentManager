@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <title>Content Manager | Doces Bárbaros</title>
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+		<meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/semantic-ui-transition@2.3.1/transition.js"></script>
+    <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src='https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.js'></script>
+    <script type="text/javascript" src='https://cdn.jsdelivr.net/npm/semantic-ui-dropdown@2.4.1/dropdown.js'></script>
+    <script type="text/javascript" src='https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js'></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/event-calendar.js"></script>
+    <script type="text/javascript" src="js/photo-manager.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-icon@2.3.3/icon.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-transition@2.3.1/transition.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-dropdown@2.4.1/dropdown.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" />
+    <link type="text/css" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
+    <link type="text/css" rel='stylesheet' href='https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.css' />
+    <link type="text/css" rel="stylesheet" href="css/style.css"/> 
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+      <!--<a class="navbar-brand" href="#">
+        <img src="img/rosa.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      </a>-->
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link" href="#home" id="home-nav"><i class="fa fa-home"></i> Home</a>
+          <a class="nav-item nav-link" href="#images" id="images-nav"><i class="fa fa-camera"></i> Banco de Imagens</a>
+          <a class="nav-item nav-link" href="#calendar" id="calendar-nav"><i class="far fa-calendar-alt"></i> Calendário</a>
+        </div>
+      </div>
+    </nav>
+
+    <div id="home" class="tab-content">
+      <div class="test">
+        <div class="vertical-align">
+          <h3>Work in progress :)</h3>
+        </div>
+      </div>
+    </div>
+
+    <div id="images" class="tab-content">
+    <center><br><br><h4 style="color:rgb(206, 123, 125); font-weight:700">Banco de Imagens</h4>
+
+    <input class="form-control" style="width:45%; display:inline; margin-bottom:10px" placeholder="Busque por palavras-chave"></input>
+    <button type="button" class="btn btn-dark btn-sm" onClick="getData()" style="margin-bottom:3px"><i class="fa fa-search"></i></button><br>
+
+    <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" style="color:#343a40; font-size:0.9rem; font-weight:bold">
+      <i id="collapseIcon" class="fa fa-chevron-down"></i> Busca Avançada
+    </a></center>
+
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body" style="width:45%; margin: 0 auto; background-color:#f1f2f3; border: 0px; ">
+        <div class="advanced-search">
+          <select class="custom-select" style="width:20%" placeholder="Tipo">
+            <option selected value="All">Todos</option>
+            <option value="Photoshoot">Ensaio</option>
+            <option value="Live">Show</option>
+            <option value="Painting">Ilustração/Desenho/Pintura</option>
+          </select>
+          <input class="form-control" style="width:20%" maxlength=4 placeholder="Ano"></input>
+          <input class="form-control" style="width:20%" placeholder="Autor"></input>
+        </div>
+      </div>
+    </div>
+    
+    <center><br><span id="results" style="display:none"></span></center><br>
+
+    <center>
+      <button id='editButton' type="button" class="btn btn-dark btn-sm" style="display:none" onClick="menuButtonController('edit')"><i class="fa fa-pencil"></i> Editar</button>
+      <div id="buttonMenu" style="display: flex; align-items: center; justify-content: space-between; width:20%">
+      
+      <button type="button" class="btn btn-success btn-sm edit-mode" style="display:none" onClick="menuButtonController('save')"><i class="fa fa-check"></i> Salvar e sair</button>
+      <button type="button" class="btn btn-warning btn-sm edit-mode" style="display:none" onClick="menuButtonController('cancel')"><i class="fa fa-close"></i> Sair</button>
+      <button id="deletionButton" type="button" class="btn btn-danger btn-sm edit-mode" style="display:none" onClick="menuButtonController('delete')"><i class="fa fa-trash"></i> Excluir fotos selecionadas</button>
+      <span id="deletionPoppover" data-toggle="popover" data-content="Selecione as imagens que deseja excluir"></span>
+    </div></center>
+
+    <!-- Photo Results -->
+    <div class="container"></div>
+    <!-- <center><ol class="works-list"></ol></center> -->
+
+    <!-- Confirmation modal -->
+    <div id="modalMsg" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p id='modalMsgText'></p>
+          </div>
+          <div class="modal-footer">
+            <button id="modalMsgConfirm" type="button" class="btn btn-primary btn-sm">Confirmar</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fixed-bottom" style="margin-bottom:30px; margin-left:30px">
+      <button type="button" class="btn btn-success btn-lg rounded-circle" data-toggle="tooltip" data-placement="right" title="Upload de imagens" data-bs-toggle="modal" data-bs-target="#uploadModal"><b>+</b></button>
+    </div>
+  </div>
+
+  <div id="calendar" class="tab-content">
+    <br><br>
+    <div id='calendarContainer' style="max-width:70%; margin: auto;"></div>
+
+    <div class="fixed-bottom" style="margin-bottom:30px; margin-left:30px">
+      <button type="button" class="btn btn-success btn-lg rounded-circle" style="background-color: #2C3E50; border-color: #2C3E50" data-toggle="tooltip" data-placement="right" title="Novo evento" onClick="loadNewEventModal();"><b>+</b></button>
+    </div>
+  </div>
+
+  <!-- Upload modal -->
+  <div id="uploadModal" class="modal fade bd-example-modal-lg" tabindex="-1" aria-hidden="true" aria-labelled-by="oi"> 
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Adicionar imagens</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <form id="imageUploadForm">
+            <div class="custom-file">
+              <input multiple type="file" class="custom-file-input" name="imageUploadInput" id="imageUploadInput" accept="image/*">
+              <label id="imageUploadInputLabel" class="custom-file-label" for="customFile">Selecione até 30 arquivos</label>
+            </div><br>
+          </form>
+
+          <form id="imgUploadForm">
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-sm">Confirmar</button></form>
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+  <!-- Add event Modal -->
+  <div id="newEventModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Criar evento</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+
+          <center>
+            <label for="buttonGroup"><b>Tipo de Evento</b></label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="eventType" onChange="newEventForm('birth')" value="birth">
+              <label class="form-check-label" for="birth">Aniversário</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="eventType" onChange="newEventForm('death')" value="death">
+              <label class="form-check-label" for="death">Morte</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="eventType" onChange="newEventForm('show')" value="show">
+              <label class="form-check-label" for="show">Show/Agenda</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="eventType" onChange="newEventForm('other')" value="other" checked>
+              <label class="form-check-label" for="other">Outro</label>
+            </div>
+          </center><br>
+
+          <form id="newEventCreationForm">
+            <div class="form-row align-items-center" style="margin:auto">             
+              <div class="col">
+                <small><b><label for="eventName">Título</label><span style="color:red">*</span></b></small>
+                <div class="input-group">
+                  <div id="eventTitlePrepend" class="input-group-prepend" style="display:none">
+                    <span class="input-group-text" id="eventTitlePrependText">Aniversário de</span>
+                  </div>
+                  <input type="text" class="form-control" id="eventName" required>
+                </div>
+              </div>
+
+              <div class="col-md-1">
+                <small><b><label for="eventDay">Dia</label><span style="color:red">*</span></b></small>
+                <input class="form-control" type="text" id="eventDay" placeholder="DD" maxlength=2 required></input>
+              </div>
+
+              <div class="col-md-1">
+                <small><b><label for="eventMonth">Mês</label><span style="color:red">*</span></b></small>
+                <input class="form-control" type="text" id="eventMonth" placeholder="MM" maxlength=2 required></input>
+              </div>
+
+              <div class="col-md-3">
+                <small><b><label for="eventYear">Ano</label><span style="color:red" id="mandatoryFieldYear">*</span></b></small>
+                <input class="form-control" type="text" id="eventYear" placeholder="YYYY" maxlength=4 required></input>
+              </div>
+              
+              <div class="col">
+                <label for="recurrent"></label>
+                <div class="form-check" id="recurrentEventDiv">
+                  <input class="form-check-input align-items-center" type="checkbox" id="recurrentEvent" onChange="disableYearField()"></input>
+                  <small><b> Repetir anualmente </b></small>
+                </div>
+            
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="modalMsgConfirm" type="submit" class="btn btn-primary btn-sm">Confirmar</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+      
+      </div>
+    </div>
+  </div>
+
+  <div id="eventDetailsModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 id="eventDetailsModal-Title"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          Conteúdo
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-sm" onclick="deleteEvent()">Excluir evento</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Fechar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="eventListModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          Filtrar eventos
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+      <form id="filterEventsListForm">
+        <div class="modal-body">
+
+          <div id="filterEventsListBody" class="form-row align-items-center" style="margin:auto">
+            <div class="col-md-3">
+              <small><b><label for="filterEventsKeyword">Palavra(s)-chave</label></b></small>
+              <input class="form-control form-control-sm" type="text" id="filterEventsKeyword"></input>
+            </div>
+
+            <div class="col-md-3">
+              <small><b><label for="filterEventsKeyword">Período</label></b></small>
+              <input class="form-control form-control-sm" type="text" id="filterEventsPeriod"></input>
+            </div>
+
+            <div class="col-md-6">
+              <small><label for="buttonGroup"><b>Tipo de Evento</b></label><br></small>
+              <div class="form-control-sm form-check-inline no-margin-right">
+                  <input class="form-control-sm form-check-input" type="checkbox" name="filterEventsType" value="'birth'" checked>
+                  <label class="form-check-label" for="birth">Aniversário</label>
+              </div>
+              <div class="form-control-sm form-check-inline no-margin-right">
+                <input class="form-control-sm form-check-input" type="checkbox" name="filterEventsType" value="'death'" checked>
+                <label class="form-check-label" for="death">Morte</label>
+              </div>
+              <div class="form-control-sm form-check-inline no-margin-right">
+                <input class="form-control-sm form-check-input" type="checkbox" name="filterEventsType" value="'show'" checked>
+                <label class="form-check-label" for="show">Show/Agenda</label>
+              </div>
+              <div class="form-control-sm form-check-inline no-margin-right">
+                <input class="form-control-sm form-check-input" type="checkbox" name="filterEventsType" value="''" checked>
+                <label class="form-check-label" for="other">Outro</label>
+              </div>
+            </div>
+          </div>
+          <br><center><small style="margin-top:10px" id="filterEventsResults"></small></center>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success btn-sm">Filtrar</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Fechar</button>
+        </div>
+      </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="photoDetailsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          Detalhes da Imagem
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="card flex-md-row mb-4 box-shadow h-md-250" style="border:0">
+              <img id="photoDetailsImage" src="" style="width: 200px; height: 250px; object-fit:contain; margin:3px"/>
+
+              <div class="card-body d-flex flex-column align-items-start mb-2" style="font-size:80%">
+                <strong class="d-inline-block text-primary mb-1" id="photoDetailsTitle"><!--Image title--></strong>
+                <div style="color:darkslategray">
+                  <i class="fa fa-calendar"></i> <span id="photoDetailsDate"><!--Date--></span>
+                  <span style="margin-left: 4px; margin-right:4px">|</span>
+                  <i class="fa fa-camera"></i> <span id="photoDetailsPhotographer"><!--Author--></span>
+                </div><br>
+
+                <strong>Descrição</strong>
+                <p id="photoDetailsDescription"><!--Description text--></p>
+
+                <small><strong>Palavras-chave</strong>
+                <p id="photoDetailsDescription">This is a wider card with supporting text below as a natural lead-in to additional content.</p></small>
+              </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-secondary btn-sm">Editar detalhes</button>
+          <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Excluir imagem</button>
+        </div>
+      </form>
+
+      </div>
+    </div>
+  </div>
+
+  </body>
+</html>
